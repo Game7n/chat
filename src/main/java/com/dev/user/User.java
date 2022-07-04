@@ -5,23 +5,26 @@ import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 
 public class User {
-    public void user() {
-        try(Socket socket = new Socket("localhost",8080);
+    private Socket socket;
+    private BufferedReader input;
+    private BufferedWriter output;
 
-            BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
-            BufferedWriter output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
-        ){
-
-            String massage = "Nikita";
-
-            output.write(massage + "\n");
-            output.flush();
-
-            System.out.println(input.readLine());
-
-
+    public User(){
+        try {
+            this.socket = new Socket("localhost", 8080);
         }catch (IOException e){
-            e.printStackTrace();
+            System.err.println("Socket failed");
+        }
+        try {
+            input = new BufferedReader(new InputStreamReader(socket.getInputStream(), StandardCharsets.UTF_8));
+            output = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), StandardCharsets.UTF_8));
+            new ReadMsg(input).start();
+            new WriteMsg(output).start();
+        }catch (IOException e){
         }
     }
-}
+
+    public void user() {
+
+        }
+    }
